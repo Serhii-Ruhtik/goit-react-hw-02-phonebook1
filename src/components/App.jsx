@@ -16,44 +16,29 @@ class App extends Component {
     filter: '',
   };
 
-  handleNameChange = event => {
-    this.setState({ name: event.target.value });
-  };
-  handleNumberChange = event => {
-    this.setState({ number: event.target.value });
-  };
-
   handleFilterChange = event => {
     this.setState({ filter: event.target.value });
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
-    const { name, number, contacts } = this.state;
-
-    if (name.trim() === '' || number.trim() === '') {
-      alert('Please enter a name.');
-      return;
-    }
-
+  addContact = (name, number) => {
+    const { contacts } = this.state;
     const nameExists = contacts.find(contact => contact.name === name);
     if (nameExists) {
       alert(`${name} is already in contacts`);
       this.setState({ name: '', number: '' });
       return;
     }
-
     const newContact = {
       id: nanoid(),
       name,
       number,
     };
-
     this.setState(prevState => ({
       contacts: [...prevState.contacts, newContact],
       name: '',
       number: '',
     }));
+    console.log('Form', this.state);
   };
 
   handleDeleteContact = contactId => {
@@ -61,27 +46,27 @@ class App extends Component {
       contacts: prevState.contacts.filter(contact => contact.id !== contactId),
     }));
   };
+  filterSuchContact = () => {
+    const { contacts, filter } = this.state;
+    const valueToLowerCase = filter.toLowerCase().trim();
+    const filteredContacts = contacts.filter(contact =>
+      contact.name.toLowerCase().trim().includes(valueToLowerCase)
+    );
+    return filteredContacts;
+  };
 
   render() {
-    const { name, number, contacts, filter } = this.state;
-    const filteredContacts = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
-    );
+    const { contacts, filter } = this.state;
+    const filteredContacts = this.filterSuchContact();
     return (
       <div className={css.container}>
         <h1 className={css.title}>Phonebook</h1>
-        <ContactForm
-          name={name}
-          number={number}
-          onNameChange={this.handleNameChange}
-          onNumberChange={this.handleNumberChange}
-          onSubmit={this.handleSubmit}
-        />
+        <ContactForm onSubmit={this.addContact} />
 
         <h2 className={css.title}>Contact List</h2>
         <Filter value={filter} onChange={this.handleFilterChange} />
         <ContactList
-          contacts={filteredContacts}
+          contacts={filteredContacts || contacts}
           onDeleteContact={this.handleDeleteContact}
         />
       </div>
