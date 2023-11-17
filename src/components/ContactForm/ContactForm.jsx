@@ -33,7 +33,7 @@ class ContactForm extends Component {
     return (
       <form className={css.form} onSubmit={this.handleSubmit}>
         <label className={css.label} htmlFor="name">
-          / Name:
+          Name:
         </label>
         <input
           className={css.input}
