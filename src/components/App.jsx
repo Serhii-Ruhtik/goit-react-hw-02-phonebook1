@@ -23,6 +23,7 @@ class App extends Component {
   addContact = (name, number) => {
     const { contacts } = this.state;
     const nameExists = contacts.find(contact => contact.name === name);
+    console.log(contacts);
     if (nameExists) {
       alert(`${name} is already in contacts`);
       this.setState({ name: '', number: '' });
@@ -35,10 +36,8 @@ class App extends Component {
     };
     this.setState(prevState => ({
       contacts: [...prevState.contacts, newContact],
-      name: '',
-      number: '',
     }));
-    console.log('Form', this.state);
+    console.log('39', newContact);
   };
 
   handleDeleteContact = contactId => {

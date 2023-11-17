@@ -17,11 +17,16 @@ class ContactForm extends Component {
   handleSubmit = event => {
     event.preventDefault();
     const { name, number } = this.state;
+    this.props.onSubmit(this.state.name, this.state.number);
+    this.reset();
 
     if (name.trim() === '' || number.trim() === '') {
       alert('Please enter a name.');
       return;
     }
+  };
+  reset = () => {
+    this.setState({ name: '', number: '' });
   };
 
   render() {
